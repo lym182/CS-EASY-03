@@ -47,4 +47,122 @@
   - *主函数中输出地址，前六位恒为“000000”，第十二十三位仍为“ff”，最后一位仍为“c”当function函数被调用时，localVar在栈上分配内存。作为main函数的局部变量，存储在栈区。当main函数返回时，localVarMain所占用的栈内存会被自动释放。如果它不是存储在栈区，会出现占用全局内存空间问题。*
 
 ### 三.浅谈Cache
+1.
+- ***冯诺伊曼体系结构***是一种计算机设计理念。
+一是采用二进制形式表示数据和指令。二是程序存储，即将程序和数据一样存储在存储器中，计算机在运行时可以按照顺序从存储器中取出指令并执行。包含：运算器，控制器，存储器，输入设备，输出设备。
+- ***现代计算机组织结构***在冯诺伊曼体系结构的基础上进行了扩展和细化。它仍然保留了冯诺伊曼体系的核心概念，如程序存储和二进制运算，但在各个部件的具体实现和性能优化等方面有了很多发展。
+- 不同点：
+   - 性能优化方面：
+冯诺伊曼体系结构侧重于基本原理的构建，而现代计算机组织结构在性能优化上做了大量工作。
+   - 复杂程度方面：
+冯诺伊曼体系结构相对简洁，主要描述了计算机的基本组成和工作原理。现代计算机组织结构则更加复杂，由于技术的发展和应用需求的增加，增加了很多新的部件和技术。
+   - 存储系统方面：
+冯诺伊曼体系结构提出了程序存储的概念，但现代计算机组织结构在存储系统上有了更多的层次和优化。
+2.
+- 存储单元与地址
+- 数据的读写操作
+- 与CPU的协同工作
+- 存储类型的差异（RAM和ROM）
+3.
+- Cache（高速缓存）的局部性原理是指：程序在执行过程中，对于存储器的访问呈现出局部性的规律。Cache的设计正是基于这种局部性原理，通过将最可能被频繁访问的内容存储在离CPU更近、速度更快的Cache中，从而提高计算机系统的性能。
+- **时间局部性**
+  - 时间局部性是指如果一个存储单元被访问，那么在不久的将来，这个存储单元很可能会被再次访问。就好像一个人在短时间内会多次查看同一份文件一样。
+  **空间局部性**
+  - 空间局部性是指一旦一个存储单元被访问，那么它附近的存储单元也很可能被访问。
+4.
+- Cache与主存的速度差异
+- 基于局部性原理的高效利用
+- 减少CPU等待时间
 ### 四.代码优化
+1. **避免“爆栈”**
+   - **避免递归调用过深**
+     - 方法一：优化递归算法：对于一些可以用递归解决的问题，尝试将其转换为非递归形式。
+     - 方法二：设置递归深度限制：如果必须使用递归算法，可以设置一个递归深度的限制。例如，在一些树形结构的遍历中，设置一个最大深度限制。当达到这个限制时，返回一个错误或者采取其他适当的措施。在Python中，可以通过一个全局变量来记录递归深度，如下（以简单的阶乘函数为例）：
+       ```python
+       max_depth = 1000
+       depth = 0
+       def factorial(n):
+           global depth
+           depth += 1
+           if depth > max_depth:
+               raise ValueError("Recursion depth exceeded")
+           if n == 0 or n == 1:
+               depth -= 1
+               return 1
+           result = n * factorial(n - 1)
+           depth -= 1
+           return result
+       ```
+   - **减少局部变量占用空间**
+     - 尽量避免在函数内部定义占用大量内存的局部变量。如果需要使用大型数据结构（如大型数组、大型结构体等），可以考虑将其定义为全局变量或者动态分配内存（在堆上分配，如使用`malloc`/`free`或`new`/`delete`）。不过，动态分配内存需要注意内存泄漏等问题。
+2. **合理利用缓存**
+   - **理解缓存的工作原理和应用场景**
+     - 缓存是基于局部性原理（时间局部性和空间局部性）来工作的。在计算机系统中，有CPU缓存（L1、L2、L3缓存）、磁盘缓存等多种缓存。以CPU缓存为例，它存储了CPU最可能频繁访问的数据和指令，使得CPU能够快速获取这些内容，减少等待主存访问的时间。
+   - **数据缓存策略**
+     - **预取策略**：根据空间局部性，提前将可能被访问的数据加载到缓存中。例如，在处理数组时，如果当前访问了数组的某个元素，那么可以预取该元素附近的几个元素到缓存中。在一些高性能计算库中，会有专门的预取指令或者预取函数来实现这种操作。
+     - **缓存替换策略**：当缓存已满时，需要选择合适的替换策略来决定替换掉缓存中的哪些内容。常见的替换策略有先进先出（FIFO）、最近最少使用（LRU）等。LRU策略是比较常用的，它会替换掉最近最少使用的数据。在软件实现中，可以通过链表或者其他数据结构来记录数据的使用时间，从而实现LRU策略。例如，在一个简单的缓存类中（以Python为例）：
+       ```python
+       class LRUCache:
+           def __init__(self, capacity):
+               self.capacity = capacity
+               self.cache = {}
+               self.usage_order = []
+           def get(self, key):
+               if key in self.cache:
+                   self.usage_order.remove(key)
+                   self.usage_order.append(key)
+                   return self.cache[key]
+               return None
+           def put(self, key, value):
+               if key in self.cache:
+                   self.usage_order.remove(key)
+               elif len(self.cache) >= self.capacity:
+                   oldest_key = self.usage_order.pop(0)
+                   self.cache.pop(oldest_key)
+               self.usage_order.append(key)
+               self.cache[key] = value
+       ```
+3. **体现程序优化性能**
+   - **理论计算方式**
+     - **时间复杂度分析**：以排序算法为例，冒泡排序的时间复杂度是$O(n^2)$，快速排序的时间复杂度是$O(nlogn)$（平均情况）。假设要对$n = 1000$个元素进行排序，对于冒泡排序，其大致的操作次数为$n^2=1000^2 = 1000000$次；对于快速排序，大致的操作次数为$nlogn = 1000 * log_2(1000)\approx1000 * 10 = 10000$次（这里是近似计算）。可以看出，在理论上，快速排序的时间复杂度更低，性能更好。
+     - **空间复杂度分析**：考虑一个简单的字符串反转函数，一种方法是使用额外的字符串来存储反转后的结果，其空间复杂度为$O(n)$（`n`为字符串长度）；另一种方法是通过交换字符位置来实现反转，空间复杂度为$O(1)$。后者在空间利用上更优化。例如，以下是两种实现方式：
+       - $O(n)$空间复杂度实现：
+         ```python
+         def reverse_string1(s):
+             return s[::-1]
+         ```
+       - $O(1)$空间复杂度实现：
+         ```python
+         def reverse_string2(s):
+             n = len(s)
+             s = list(s)
+             for i in range(n // 2):
+                 s[i], s[n - 1 - i] = s[n - 1 - i], s[i]
+             return "".join(s)
+         ```
+   - **运行时间数据结果说明**
+     - **使用工具测量运行时间**：可以使用编程语言自带的时间测量工具来比较程序优化前后的运行时间。例如，在Python中，可以使用`time`模块。以下是比较两种计算斐波那契数列方法（递归和迭代）的运行时间：
+       ```python
+       import time
+       def fibonacci_recursive(n):
+           if (n <= 1):
+               return n
+           return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+       def fibonacci_iterative(n):
+           if (n <= 1):
+               return n
+           a, b = 0, 1
+           for _ in range(2, n + 1):
+               a, b = b, a + b
+           return b
+       n = 30
+       start_time = time.time()
+       fibonacci_recursive(n)
+       end_time = time.time()
+       print("Recursive method time:", end_time - start_time)
+       start_time = time.time()
+       fibonacci_iterative(n)
+       end_time = time.time()
+       print("Iterative method time:", end_time - start_time)
+       ```
+     - 在运行上述代码时，会发现迭代方法的运行时间远远小于递归方法，从而体现出程序优化后的性能提升。这种通过实际运行时间测量的方法可以直观地展示程序优化的效果。
