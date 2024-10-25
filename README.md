@@ -79,13 +79,13 @@
 - 优化前
 ```
 #include <stdio.h>
-
-int factorial(int n) {
-    if (n == 0 || n == 1) {
+//求阶乘
+int factorial(int num) {
+    if (num == 0 || num == 1) {
         return 1;
     }
     else {
-        return n * factorial(n - 1);
+        return num * factorial(num - 1);
     }
 }
 ```
@@ -107,22 +107,22 @@ int factorial(int num) {
 ```
 #include <stdio.h>
 // 斐波那契数
-int fibonacciRecursive(int n) {
-    if (n == 0 || n == 1){
-        return n;
+int fibonacciRecursive(int num) {
+    if (num == 0 || num == 1){
+        return num;
     }
-    return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+    return fibonacciRecursive(num - 1) + fibonacciRecursive(num - 2);
 }
 ```
 - 优化后
 ```
 #include <stdio.h>
-// 迭代计算斐波那契数
-int fibonacciIterative(int n) {
-    if (n == 0 || n == 1)
-        return n;
+// 斐波那契数
+int fibonacciIterative(int num) {
+    if (num == 0 || num == 1)
+        return num;
     int a = 0, b = 1, c;
-    for (int i = 2; i <= n; i++) {
+    for (int i = 2; i <= num; i++) {
         c = a + b;
         a = b;
         b = c;
