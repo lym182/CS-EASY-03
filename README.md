@@ -88,15 +88,6 @@ int factorial(int n) {
         return n * factorial(n - 1);
     }
 }
-
-int main() {
-    int num;
-    printf("请输入一个整数：");
-    scanf("%d", &num);
-    int result = factorial(num);
-    printf("阶乘是%d\n", result);
-    return 0;
-}
 ```
 - 优化后(减少函数调用次数)
 ```
@@ -108,14 +99,6 @@ int factorial(int num) {
         result *= i;
     }
     return result;
-}
-int main() {
-    int num;
-    printf("请输入一个整数：");
-    scanf("%d", &num);
-    int result = factorial(num);
-    printf("阶乘是 %d\n", result);
-    return 0;
 }
 ```
 
