@@ -75,8 +75,8 @@
 - 减少CPU等待时间
 
 ### 代码优化
-- 尾递归优化
-  - 优化前
+1.尾递归优化
+- 优化前
 ```
 #include <stdio.h>
 
@@ -97,7 +97,9 @@ int main() {
     printf("阶乘是%d\n", result);
     return 0;
 }
-  - 优化后(减少函数调用次数)
+```
+- 优化后(减少函数调用次数)
+```
 #include <stdio.h>
 //求阶乘
 int factorial(int num) {
@@ -107,19 +109,18 @@ int factorial(int num) {
     }
     return result;
 }
-```
-```
 int main() {
     int num;
     printf("请输入一个整数：");
     scanf("%d", &num);
     int result = factorial(num);
-    printf("阶乘是 %lld\n", res);
+    printf("阶乘是 %d\n", result);
     return 0;
 }
 ```
-- 时间复杂度优化
-  - 优化前
+
+2.时间复杂度优化
+- 优化前
 ```
 #include <stdio.h>
 // 斐波那契数
@@ -130,7 +131,7 @@ int fibonacciRecursive(int n) {
     return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
 }
 ```
-  - 优化后
+- 优化后
 ```
 #include <stdio.h>
 // 迭代计算斐波那契数
