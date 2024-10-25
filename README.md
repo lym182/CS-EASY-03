@@ -73,3 +73,76 @@
 - Cache与主存的速度差异
 - 基于局部性原理的高效利用
 - 减少CPU等待时间
+
+### 代码优化
+- 尾递归优化
+  - 优化前
+```
+#include <stdio.h>
+
+int factorial(int n) {
+    if (n == 0 || n == 1) {
+        return 1;
+    }
+    else {
+        return n * factorial(n - 1);
+    }
+}
+
+int main() {
+    int num;
+    printf("请输入一个整数：");
+    scanf("%d", &num);
+    int result = factorial(num);
+    printf("阶乘是%d\n", result);
+    return 0;
+}
+  - 优化后(减少函数调用次数)
+#include <stdio.h>
+
+int factorial(int num) {
+    int result = 1;
+    for (int i = 2; i <= num; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+int main() {
+    int num;
+    printf("请输入一个整数：");
+    scanf("%d", &num);
+    int result = factorial(num);
+    printf("阶乘是 %lld\n", res);
+    return 0;
+}
+```
+- 时间复杂度优化
+  -优化前
+```
+#include <stdio.h>
+
+// 递归计算斐波那契数
+int fibonacciRecursive(int n) {
+    if (n == 0 || n == 1)
+        return n;
+    return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+}
+```
+  -优化后
+```
+#include <stdio.h>
+
+// 迭代计算斐波那契数
+int fibonacciIterative(int n) {
+    if (n == 0 || n == 1)
+        return n;
+    int a = 0, b = 1, c;
+    for (int i = 2; i <= n; i++) {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+}
+```
