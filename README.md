@@ -64,7 +64,7 @@
 - 与CPU的协同工作
 - 存储类型的差异（RAM和ROM）
 3.
-- Cache（高速缓存）的局部性原理是指：程序在执行过程中，对于存储器的访问呈现出局部性的规律。Cache的设计正是基于这种局部性原理，通过将最可能被频繁访问的内容存储在离CPU更近、速度更快的Cache中，从而提高计算机系统的性能。
+- **Cache（高速缓存）的局部性原理**是指：程序在执行过程中，对于存储器的访问呈现出局部性的规律。Cache的设计正是基于这种局部性原理，通过将最可能被频繁访问的内容存储在离CPU更近、速度更快的Cache中，从而提高计算机系统的性能。
 - **时间局部性**
   - 时间局部性是指如果一个存储单元被访问，那么在不久的将来，这个存储单元很可能会被再次访问。就好像一个人在短时间内会多次查看同一份文件一样。
 - **空间局部性**
@@ -99,7 +99,7 @@ int main() {
 }
   - 优化后(减少函数调用次数)
 #include <stdio.h>
-
+//求阶乘
 int factorial(int num) {
     int result = 1;
     for (int i = 2; i <= num; i++) {
@@ -107,7 +107,8 @@ int factorial(int num) {
     }
     return result;
 }
-
+```
+```
 int main() {
     int num;
     printf("请输入一个整数：");
@@ -118,21 +119,20 @@ int main() {
 }
 ```
 - 时间复杂度优化
-  -优化前
+  - 优化前
 ```
 #include <stdio.h>
-
-// 递归计算斐波那契数
+// 斐波那契数
 int fibonacciRecursive(int n) {
-    if (n == 0 || n == 1)
+    if (n == 0 || n == 1){
         return n;
+    }
     return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
 }
 ```
-  -优化后
+  - 优化后
 ```
 #include <stdio.h>
-
 // 迭代计算斐波那契数
 int fibonacciIterative(int n) {
     if (n == 0 || n == 1)
